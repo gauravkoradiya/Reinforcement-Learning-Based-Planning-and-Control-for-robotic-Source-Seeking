@@ -1,10 +1,3 @@
-# Define the environment:
-
-# State: [f, df, w] where these values can be derived from kinematic parameters such as slip, thrust, yaw, etc.
-# Action: [stop, curved walk, sharp turn]
-# Reward: A function of distance from the odor source and plume encounter rate.
-
-
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -14,15 +7,23 @@ import random
 
 # Neural Network model for Q-value approximation
 class DQN(nn.Module):
-    def __init__(self, input_dim, output_dim):
+    """
+    DQN model for Q-value approximation. The model consists of 5 fully connected layers with ReLU activation functions. The output layer has a linear activation function. The input size is the state size and the output size is the action size.
+    """
+    def __init__(self, state_size, action_size):
         super(DQN, self).__init__()
-        self.fc1 = nn.Linear(input_dim, 128)
-        self.fc2 = nn.Linear(128, output_dim)
-
+        self.linear1 = nn.Linear(state_size, 64)
+        self.linear2 = nn.Linear(64, 128)
+        self.linear3 = nn.Linear(128, 256)
+        self.linear4 = nn.Linear(256, 128)
+        self.linear5 = nn.Linear(128, 64)
+        self.leakyrelu = nn.LeakyReLU()
+        self.output = nn.Linear(64, action_size)
+    
     def forward(self, x):
-        x = torch.relu(self.fc1(x))
-        x = self.fc2(x)
-        return x
-
-
-
+        x = self.leakyrelu(self.linear1(x))
+        x = self.leakyrelu(self.linear2(x))
+        x = self.leakyrelu(self.linear3(x))
+        x = self.leakyrelu(self.linear4(x))
+        x = self.leakyrelu(self.linear5(x))
+        return self.output(x)

@@ -36,17 +36,17 @@ class FlyEnvironment(gym.Env):
         self.detection_radius = detection_radius
         self.state = self.reset()  # To be initialized as (x, y, light_condition)
         self.max_magnitude = 1000
-        self.action_effects = {
-            0: (0, 0),
-            1: (0, 10),
-            2: (0, -10),
-            3: (-10, 0),
-            4: (10, 0),
-            5: (10, 10),
-            6: (-10, 10),
-            7: (10, -10), # use left sharp turn formula 
-            8: (-10, -10), # use left sharp turn formula
-        }
+        # self.action_effects = {
+        #     0: (0, 0),
+        #     1: (0, 10),
+        #     2: (0, -10),
+        #     3: (-10, 0),
+        #     4: (10, 0),
+        #     5: (10, 10),
+        #     6: (-10, 10),
+        #     7: (10, -10), # use left sharp turn formula 
+        #     8: (-10, -10), # use left sharp turn formula
+        # }
         self.action_space = ['stop', 'up', 'down', 'left', 'right', 'up_right', 'up_left', 'bottom_right', 'bottom_left']
 
         # Define angle ranges for each action (in radians)
@@ -62,14 +62,14 @@ class FlyEnvironment(gym.Env):
             8: (-7*np.pi/8, -5*np.pi/8),
         }
 
-    def reset(self):
+    def reset(self, x=None, y=None, light=0):
         """
         Resets the environment to an initial state.
         """
-        x = np.random.randint(low = self.x_min, high = self.x_max)
-        y = np.random.randint(low = self.y_min, high = self.y_max)
-        light_condition = 0
-        self.state = (x, y, light_condition)
+        if x is None or y is None:
+            x = np.random.randint(low = self.x_min, high = self.x_max)
+            y = np.random.randint(low = self.y_min, high = self.y_max)
+        self.state = (x, y, light)
         return self.state
 
     def is_near_to_source(self, position):

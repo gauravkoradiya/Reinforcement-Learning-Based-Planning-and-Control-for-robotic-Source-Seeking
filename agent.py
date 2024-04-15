@@ -44,7 +44,7 @@ class DQNAgent:
     def __init__(self, state_size, action_size, batch_size=64,epsilon=0.1, gamma=0.99, learning_rate=0.001, epsilon_decay=0.995, epsilon_min=0.01):
         self.state_size = state_size
         self.action_size = action_size
-        self.memory = list()#deque(maxlen=200000)
+        self.memory = list() #deque(maxlen=200000)
         self.gamma = gamma
         self.epsilon =  epsilon
         self.epsilon_min = epsilon_min
@@ -65,9 +65,8 @@ class DQNAgent:
     def act(self, state):
         if np.random.rand() <= self.epsilon:
             return random.randrange(self.action_size)
-        state = torch.FloatTensor(state).unsqueeze(0)
         with torch.no_grad():
-            act_values = self.model(state)
+            act_values = self.model(torch.FloatTensor(state).unsqueeze(0))
         return np.argmax(act_values.cpu().data.numpy())
     
     def get_random_contiguous_batches(self):
@@ -117,9 +116,9 @@ class DQNAgent:
             history['train/loss'].append(batch_loss.item())
             
             # Optimize
-            self.optimizer.zero_grad()
             batch_loss.backward()
             self.optimizer.step()
+            self.optimizer.zero_grad()
 
             # Periodically update the target network
             steps_done += 1

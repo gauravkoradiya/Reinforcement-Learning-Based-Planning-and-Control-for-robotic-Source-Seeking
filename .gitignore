@@ -3,3 +3,8 @@ resources/*
 models/*
 runs/*
 logs/*
+notebook/runs/*
+__pycache__
+multirun/*
+outputs/*
+notebook/temp.ipynb

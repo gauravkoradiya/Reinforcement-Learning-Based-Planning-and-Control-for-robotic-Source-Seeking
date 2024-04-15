@@ -1,0 +1,12 @@
+defaults:
+  - _self_
+
+data_path: './Data/processed'
+training: true
+evaluation: true
+hyperparameters:
+  epsilon: 0.9
+  gamma: 0.9
+  learning_rate: 0.01
+  batch_size: 2048
+model_path: null
